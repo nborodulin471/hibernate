@@ -1,20 +1,18 @@
 package com.example.hibernate.dao;
 
 import com.example.hibernate.model.Person;
+import com.example.hibernate.model.PersonId;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class PersonDao {
-    @PersistenceContext
-    EntityManager entityManager;
+public interface PersonDao extends JpaRepository<Person, PersonId> {
+    List<Person> findByCityOfLivingIgnoreCase(String city);
 
-    public List<Person> getPersonsByCity(String city) {
-        return entityManager.createQuery("select p from Person p where lower(p.cityOfLiving ) = lower(?1)")
-                .setParameter(1, city)
-                .getResultList();
-    }
+    List<Person> findByAgeLessThan(int age);
+
+    Optional<Person> findByNameAndSurname(String name, String Surname);
 }
