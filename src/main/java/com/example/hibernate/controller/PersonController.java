@@ -17,6 +17,18 @@ public class PersonController {
 
     @GetMapping("/persons/by-city")
     ResponseEntity<List<Person>> getPersonsByCity(@RequestParam String city) {
-        return ResponseEntity.ok(personDao.getPersonsByCity(city));
+        return ResponseEntity.ok(personDao.findByCityOfLivingIgnoreCase(city));
+    }
+
+    @GetMapping("/persons/by-younger-age")
+    ResponseEntity<List<Person>> getPersonsByYoungerAge(@RequestParam int age) {
+        return ResponseEntity.ok(personDao.findByAgeLessThan(age));
+    }
+
+    @GetMapping("/person/by-name")
+    ResponseEntity<Person> getPersonsByCity(@RequestParam String name, @RequestParam String surname) {
+        return personDao.findByNameAndSurname(name, surname)
+                .map(person -> ResponseEntity.ok().body(person))
+                .orElseGet(() -> (ResponseEntity<Person>) ResponseEntity.notFound());
     }
 }
